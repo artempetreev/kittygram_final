@@ -1,7 +1,7 @@
 version: '3'
 
 volumes:
-  pg_data_kittygram:
+  pg_data_kittygram_production:
   kittygram_static:
   media:
 
@@ -10,9 +10,9 @@ services:
     image: postgres:13
     env_file: .env
     volumes:
-      - pg_data_kittygram:/var/lib/postgresql/data
+      - pg_data_kittygram_production:/var/lib/postgresql/data
   backend:
-    build: ./backend/
+    image: idinfinity/kittygram_backend
     env_file: .env
     volumes:
       - kittygram_static:/backend_static
@@ -21,13 +21,13 @@ services:
       - db
   frontend:
     env_file: .env
-    build: ./frontend/
+    image: idinfinity/kittygram_frontend
     volumes:
       - kittygram_static:/static
     command: cp -r /app/build/. /static/
     
   gateway:
-    build: ./nginx/
+    image: idinfinity/kittygram_gateway
     env_file: .env
     ports:
       - 9000:80
